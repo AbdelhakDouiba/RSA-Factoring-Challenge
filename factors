@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-gcc factors.c -o f
+gcc -O3 factors.c -o f -lgmp
 ./f $1
