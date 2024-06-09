@@ -94,11 +94,7 @@ void calc(mpz_t n)
 		}
 	}
 	gmp_printf("%Zd=%Zd*%Zd\n", n, b, a);
-	mpz_clear(nmoda);
-	mpz_clear(b);
-	mpz_clear(a);
-	mpz_clear(one);
-	mpz_clear(zero);
+	clr(&a, &b, &nmoda, &one, &zero, NULL, NULL, NULL, NULL);
 }
 
 /**
@@ -109,42 +105,40 @@ void calc(mpz_t n)
 */
 int is_prime(mpz_t n)
 {
-	mpz_t two, three, i, imul, itwo, nomdi, nmoditwo, zero, six;
+	mpz_t two, three, i, imul, itwo, nomdi, zero, sqr, one;
 
 	mpz_init(two);
+	mpz_init(one);
+	mpz_init(sqr);
 	mpz_init(zero);
-	mpz_init(six);
 	mpz_init(itwo);
 	mpz_init(nomdi);
-	mpz_init(nmoditwo);
 	mpz_init(three);
 	mpz_init(i);
 	mpz_init(imul);
 	mpz_set_str(zero, "0", 10);
 	mpz_set_str(two, "2", 10);
 	mpz_set_str(three, "3", 10);
-	mpz_set_str(six, "6", 10);
 	if (mpz_cmp(n, three) <= 0)
 	{
-		clr(&two, &three, &i, &imul, &itwo, &nomdi, &nmoditwo, &zero, &six);
-		return 0;
+		clr(&two, &three, &i, &imul, &itwo, &nomdi, &sqr, &zero, &one);
+		return (0);
 	}
 	mpz_set_str(i, "5", 10);
 	mpz_mul(imul, i, i);
-	while (mpz_cmp(imul, n) <= 0)
+	mpz_sqrt(sqr, n);
+	while (mpz_cmp(imul, sqr) <= 0)
 	{
-		mpz_add(itwo, i, two);
 		mpz_mod(nomdi, n, i);
-		mpz_mod(nmoditwo, n, itwo);
-		if (mpz_cmp(nomdi, zero) == 0 || mpz_cmp(nmoditwo, zero) == 0)
+		if (mpz_cmp(nomdi, zero) == 0)
 		{
-			clr(&two, &three, &i, &imul, &itwo, &nomdi, &nmoditwo, &zero, &six);
+			clr(&two, &three, &i, &imul, &itwo, &nomdi, &sqr, &zero, &one);
 			return (-1);
 		}
-		mpz_add(i, i, six);
+		mpz_add(i, i, one);
 		mpz_mul(imul, i, i);
 	}
-	clr(&two, &three, &i, &imul, &itwo, &nomdi, &nmoditwo, &zero, &six);
+	clr(&two, &three, &i, &imul, &itwo, &nomdi, &sqr, &zero, &one);
 	return (0);
 }
 
